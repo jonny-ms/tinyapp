@@ -24,26 +24,27 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
-});
-
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
-
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]}
   res.render("urls_show", templateVars);
 });
 
+app.post("/urls", (req, res) => {
+  let newShortURL = generateRandomString();
+  urlDatabase[newShortURL] = req.body.longURL;
+  console.log(urlDatabase)
+  res.redirect(`/urls/${newShortURL}`);
+});
+
 function generateRandomString() {
   let result = '';
   let characters = 'abcbefghijklmnopqurstuvwxyz0123456789';
   for (let i = 1; i <= 6; i++) {
-    result += characters[Math.floor(Math.random() * characters.length)]
+    result += characters[Math.floor(Math.random() * characters.length)];
   } 
   return result;
 }
