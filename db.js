@@ -1,14 +1,14 @@
-const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
-
 const users = {
   abcdef: {
     id: "abcdef",
     email: "test@test.com",
     password: "password"
   }
+};
+
+const urlDatabase = {
+  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: users.abcdef.id },
+  "9sm5xK": { longURL: "http://www.google.com", userID: users.abcdef.id}
 };
 
 const foundUserFromEmail = function(email) {
@@ -27,4 +27,14 @@ const generateRandomString = function() {
   return result;
 };
 
-module.exports = { urlDatabase, users, foundUserFromEmail, generateRandomString }
+const urlsForUser = function(id) {
+  let userURLs = {}
+  for (let url in urlDatabase) {
+    if (urlDatabase[url].userID === id) {
+      userURLs[url] = urlDatabase[url].longURL;
+    }
+  }
+  return userURLs;
+};
+
+module.exports = { urlDatabase, users, foundUserFromEmail, generateRandomString, urlsForUser }
