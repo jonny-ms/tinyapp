@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcrypt");
 const { urlDatabase, users, foundUserFromEmail, generateRandomString, urlsForUser } = require("./db");
 const PORT = 8080;
 
@@ -30,7 +31,7 @@ app.post("/login", (req, res) => {
     res.status(403).send("Error: Email not found.")
   } else {
     let user = foundUserFromEmail(req.body.email)
-    if (users[user].password !== req.body.password) {
+    if (!bcrypt.compareSync(req.body.password, users[user].password)) {
       res.status(403).send("Error: Password incorrect. If you forgot, sorry I can't help you..")
     } else {
       res.cookie("user_id", users[user].id);
@@ -53,7 +54,7 @@ app.post("/register", (req, res) => {
     res.status(400).send("Error: Email and password fields are required for registration.");
   } else if (foundUserFromEmail(req.body.email)) res.status(400).send("Error: Email already assigned to user")
   let id = generateRandomString();
-  users[id] = { id, email: req.body.email, password: req.body.password};
+  users[id] = { id, email: req.body.email, password: bcrypt.hashSync(req.body.password, 10) };
   res.cookie("user_id", id);
   res.redirect("/urls");
 });
