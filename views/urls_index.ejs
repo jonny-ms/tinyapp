@@ -13,7 +13,12 @@
 </header>
 
 <body>
+
   <main style="margin: 1em;">
+    <% if (!user) { %>
+    <h3>Please register or login to view your tiny URLs!</h3>
+    <% } else { %>
+
     <h3>My URLs</h3>
     <table class="table">
       <thead>
@@ -40,7 +45,7 @@
               </form>
             </td>
           </tr>
-        <% } %>
+        <% } } %>
       </tbody>
     </table>
   </main>
