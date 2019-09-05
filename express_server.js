@@ -9,16 +9,12 @@ const app = express();
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
-  name: "session",
+  name: "user_id",
   keys: ["asdfgh", "qwerty"]
 }));
 
 app.listen(PORT, () => {
   console.log(`Tiny App listening on port ${PORT}!`);
-});
-
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
 });
 
 app.get("/", (req, res) => {
@@ -35,11 +31,11 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   if (!getUserByEmail(req.body.email, users)) {
-    res.status(403).send("Error: Email not found.")
+    res.status(403).send("Error: Email not found.");
   } else {
-    let user = getUserByEmail(req.body.email, users)
+    let user = getUserByEmail(req.body.email, users);
     if (!bcrypt.compareSync(req.body.password, users[user].password)) {
-      res.status(403).send("Error: Password incorrect. If you forgot, sorry I can't help you..")
+      res.status(403).send("Error: Password incorrect. If you forgot, sorry I can't help you..");
     } else {
       req.session.user_id = users[user].id;
       res.redirect("/urls");
@@ -53,13 +49,13 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  res.render("urls_register", {user: users[req.session.user_id]})
+  res.render("urls_register", {user: users[req.session.user_id]});
 });
 
 app.post("/register", (req, res) => {
-  if(!req.body.email || !req.body.password) {
+  if (!req.body.email || !req.body.password) {
     res.status(400).send("Error: Email and password fields are required for registration.");
-  } else if (getUserByEmail(req.body.email, users)) res.status(400).send("Error: Email already assigned to user")
+  } else if (getUserByEmail(req.body.email, users)) res.status(400).send("Error: Email already assigned to user");
   let id = generateRandomString();
   users[id] = { id, email: req.body.email, password: bcrypt.hashSync(req.body.password, 10) };
   req.session.user_id = id;
@@ -68,9 +64,8 @@ app.post("/register", (req, res) => {
 
 app.get("/urls", (req, res) => {
   
-  let user = req.session.user_id
-  let templateVars = { urls: urlsForUser(user), user: users[user]}
-  console.log(templateVars)
+  let user = req.session.user_id;
+  let templateVars = { urls: urlsForUser(user), user: users[user]};
   res.render("urls_index", templateVars);
 });
 
@@ -83,8 +78,8 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let user = req.session.user_id
-  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL , user: users[user], urls: urlsForUser(user)}
+  let user = req.session.user_id;
+  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL , user: users[user], urls: urlsForUser(user)};
   res.render("urls_show", templateVars);
 });
 
@@ -100,14 +95,18 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  if (urlsForUser(req.session.user_id).hasOwnProperty(req.params.shortURL)) {
+  const has = Object.prototype.hasOwnProperty;
+  const user = urlsForUser(req.session.user_id);
+  if (has.call(user, req.params.shortURL)) {
     delete urlDatabase[req.params.shortURL];
   }
   res.redirect("/urls");
 });
 
 app.post("/urls/:shortURL", (req, res) => {
-  if (urlsForUser(req.session.user_id).hasOwnProperty(req.params.shortURL)) {
+  const has = Object.prototype.hasOwnProperty;
+  const user = urlsForUser(req.session.user_id);
+  if (has.call(user, req.params.shortURL)) {
     urlDatabase[req.params.shortURL].longURL = req.body.newURL;
   }
   res.redirect("/urls");

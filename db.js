@@ -24,12 +24,12 @@ const generateRandomString = function() {
   let characters = 'abcbefghijklmnopqurstuvwxyz0123456789';
   for (let i = 1; i <= 6; i++) {
     result += characters[Math.floor(Math.random() * characters.length)];
-  } 
+  }
   return result;
 };
 
 const urlsForUser = function(id) {
-  let userURLs = {}
+  let userURLs = {};
   for (let url in urlDatabase) {
     if (urlDatabase[url].userID === id) {
       userURLs[url] = urlDatabase[url].longURL;
@@ -38,6 +38,4 @@ const urlsForUser = function(id) {
   return userURLs;
 };
 
-console.log(getUserByEmail("test@test.com", users))
-console.log(getUserByEmail("willthisbeundefined", users))
-module.exports = { urlDatabase, users, getUserByEmail, generateRandomString, urlsForUser }
+module.exports = { urlDatabase, users, getUserByEmail, generateRandomString, urlsForUser };
