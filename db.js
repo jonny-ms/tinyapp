@@ -13,11 +13,10 @@ const urlDatabase = {
   "9sm5xK": { longURL: "http://www.google.com", userID: users.abcdef.id}
 };
 
-const foundUserFromEmail = function(email) {
+const getUserByEmail = function(email, users) {
   for (let user in users) {
     if (users[user].email === email) return user;
   }
-  return false;
 };
 
 const generateRandomString = function() {
@@ -39,4 +38,6 @@ const urlsForUser = function(id) {
   return userURLs;
 };
 
-module.exports = { urlDatabase, users, foundUserFromEmail, generateRandomString, urlsForUser }
+console.log(getUserByEmail("test@test.com", users))
+console.log(getUserByEmail("willthisbeundefined", users))
+module.exports = { urlDatabase, users, getUserByEmail, generateRandomString, urlsForUser }
