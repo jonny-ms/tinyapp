@@ -8,9 +8,8 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>TinyApp</title>
 </head>
-<header>
-  <% include ./partials/_header %>
-</header>
+
+<% include ./partials/_header %>
 
 <body>
 
@@ -40,7 +39,7 @@
               </form>
             </td>  
             <td>
-              <form method="POST" action="/urls/<%=url%>/delete">
+              <form method="POST" action="/urls/<%=url%>?_method=DELETE">
                 <button type="submit" class="btn btn-outline-danger">Delete</button>
               </form>
             </td>
