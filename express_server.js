@@ -2,11 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcrypt");
+const methodOverride = require("method-override")
 const { urlDatabase, users, getUserByEmail, generateRandomString, urlsForUser } = require("./db");
 const PORT = 8080;
 
 const app = express();
 app.set("view engine", "ejs");
+app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
   name: "user_id",
@@ -94,19 +96,19 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
-app.post("/urls/:shortURL/delete", (req, res) => {
+app.delete("/urls/:shortURL", (req, res) => {
   const has = Object.prototype.hasOwnProperty;
-  const user = urlsForUser(req.session.user_id);
-  if (has.call(user, req.params.shortURL)) {
+  const userUrls = urlsForUser(req.session.user_id);
+  if (has.call(userUrls, req.params.shortURL)) {
     delete urlDatabase[req.params.shortURL];
   }
   res.redirect("/urls");
 });
 
-app.post("/urls/:shortURL", (req, res) => {
+app.put("/urls/:shortURL", (req, res) => {
   const has = Object.prototype.hasOwnProperty;
-  const user = urlsForUser(req.session.user_id);
-  if (has.call(user, req.params.shortURL)) {
+  const userUrls = urlsForUser(req.session.user_id);
+  if (has.call(userUrls, req.params.shortURL)) {
     urlDatabase[req.params.shortURL].longURL = req.body.newURL;
   }
   res.redirect("/urls");
