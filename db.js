@@ -9,8 +9,10 @@ const users = {
 };
 
 const urlDatabase = {
-  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: users.abcdef.id },
-  "9sm5xK": { longURL: "http://www.google.com", userID: users.abcdef.id}
+  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: users.abcdef.id, visitCount: 0,},
+  "9sm5xK": { longURL: "http://www.google.com", userID: users.abcdef.id, visitCount: 0},
+  "Avt5i2": { longURL: "http://www.bbc.com", userID: users.abcdef.id, visitCount: 0},
+  "lU3p2o": { longURL: "http://www.cbc.ca", userID: users.abcdef.id, visitCount: 0}
 };
 
 const getUserByEmail = function(email, users) {
